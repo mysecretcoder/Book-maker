@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------
+# bookmarker
+# A WWW based bookmark management, retrieval, and search tool.
+# Copyright (C) 1998  Padraic Renaghan
+# Licensed under terms of GNU General Public License
+# (see http://www.renaghan.com/bookmarker/source/LICENSE)
+# ---------------------------------------------------------------
+
+Besides myself, Padraic Renaghan <padraic@renaghan.com>,
+the following folks have contributed code to the bookmarker
+project.
+
+Keyword field code
+Compact list layout code
+Saved Search Concept
+Filtered Tree View Concept
+  Keith Amidon <camalot@picnicpark.org>
+
+
+
+---------------------------------------------------------------------------

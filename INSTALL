@@ -1,0 +1,112 @@
+----------------------------------------------------------------------
+bookmarker
+A WWW based bookmark management, retrieval, and search tool.
+Copyright (C) 1998-2000  Padraic Renaghan
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+Padraic Renaghan
+e-mail <padraic@renaghan.com>
+bookmarker home <http://renaghan.com/pcr/bookmarker.html>
+personal home <http://renaghan.com/pcr/>
+----------------------------------------------------------------------
+These instructions assume that you have the following working
+together: Web Server, PHP, and database. I recommend the
+following configuration:
+
+- Apache Web Server (http://www.apache.org/). I recommend downloading
+the source and compiling it yourself so that you can compile PHP as
+an Apache module. NOTE: The RPM or other binary version should work
+as well.
+
+- PHP (http://www.php.net/). Again I recommend downloading the source
+and compiling it yourself so that you can compile PHP as an Apache
+module. NOTE: bookmarker should also work using PHP as a CGI
+executable either compiled yourself or from a binary distribution of
+PHP.
+
+- MySQL (http://www.mysql.net/). You can either compile the source,
+or in my case I downloaded the binary RPMs from the MySQL website.
+Either should work.
+
+- PostgreSQL (http://www.postgresql.org). Others have tested and have
+had success using bookmarker with PostgreSQL.
+
+- ODBC/Microsoft SQL Server. Others have tested and have had success using
+bookmarker with MS SQL Server.
+
+--
+bookmarker installation
+(after untar/unzip the distribution file to a temporary location...)
+
+PLEASE READ THE UPGRADE FILE INCLUDED IN THE DISTRIBUTION
+IF YOU ARE UPGRADING FROM A PREVIOUS VERSION OF BOOKMARKER.
+
+1. Move the bookmarker directory that was created by the un-tar/un-zip to
+a location under your webserver's document root - so that the
+web server will serve the bookmarker pages.
+
+2. Tell your webserver NOT TO SERVE pages in the bookmarker/lib directory.
+These pages contain the user ID and password to your database and
+you don't want folks seeing them. I have included an .htaccess
+file in this directory for use by Apache that will stop browsing
+of the lib directory. Make sure and test this after the installation
+by trying to get to http://your-domain.com/bookmarker/lib/bklocal.inc
+You should NOT be able to get to this URL.
+
+3. Update the bklocal.inc file with the name of your bookmarker
+database and the user ID and password used to connect to it. I use
+"bookmarks" as the name of my bookmarker database. Review the
+contents of this file and update to support the database you are
+using. 
+
+4. Update the bookmarker.inc file with the configuration settings
+for your environment.
+
+5. If you are using PostgreSQL, update the bkprepend.inc file to
+comment the include of db_mysql and un-comment the include of db_pgsql.
+   If you are using an ODBC database like MS SQL Server, update the 
+bkprepend.inc file to comment the include of db_mysql and un-comment 
+the include of db_odbc.
+
+OPTIONAL: 
+  Full customization is available with the template support in bookmarker.
+Update the files in the bookmarker/lib/templates directory to create the 
+look & feel and language that you desire for your installation of bookmarker.
+
+6. Create a database for bookmarker (e.g., "bookmarks"), then 
+create the tables in the database used by bookmarker
+using the ./lib/db/create_db.[your database] definition. 
+In MySQL this can be done
+(assuming you have created a database named "bookmarks") with the
+following command:
+  mysql bookmarks <./lib/db/create_db.mysql
+
+7. create_db.* script creates a sample user with sample
+bookmarks to get you up and running quickly. The user ID of the
+sample user is "bk" and the password is "bk". Additional users can be
+added to bookmarker using the user page. Users with update rights need to
+have "editor" in the perms column of auth_user. "editor" permission
+allows a user to add/update/delete/select bookmarks, "guest" allows
+select only, and "admin" allows same as "editor" plus being able to
+add/update/delete/maintain bookmarker users.
+
+8. Open the index.php3 page in your browser, click the "List View"
+link on the top of the start page, enter "bk" in the user ID field,
+enter "bk" in the password field, click "Login" button, and enjoy!
+
+9. Use the Import Bookmarks page under User Preferences to import
+your Netscape Bookmarks file into bookmarker.

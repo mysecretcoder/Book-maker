@@ -1,0 +1,401 @@
+# ---------------------------------------------------------------
+# bookmarker
+# A WWW based bookmark management, retrieval, and search tool.
+# Copyright (C) 1998  Padraic Renaghan
+# Licensed under terms of GNU General Public License
+# (see http://www.renaghan.com/bookmarker/source/LICENSE)
+# ---------------------------------------------------------------
+
+11/01/2000   Version 2.8.0
+ - changed comments in pgsql create file to -- as
+   suggested by jlc6@po.cwru.edu
+ - changed public to public_f in bkshared.inc
+ - fixed handling of user_total_bookmarks.
+   NOTE: if upgrading, make sure and delete all rows
+   in active_sessions table to allow this fix to work!
+   (thanks to gburca@yahoo.com)
+ - fixed sort/control-break logic in list pages to use
+   category/subcat names, not IDs to support viewing
+   bookmarks from multiple users
+   (thanks to yamamoto@trustbee.com)
+ - fixed delete logic in codes.php3 to correctly update
+   bookmark table
+   (thanks to yamamoto@trustbee.com)
+       
+08/10/2000   Version 2.7.0
+ - removed guest user settings. now using PHPLIB default
+   authentication to handle public access.
+
+07/17/2000   Version 2.6.0
+ - added escape() to quik-mark and mail-this-link javascript to 
+   handle ampersands properly
+   you'll want to update your quik-mark and mail-this-link bookmarks
+   in your browser!
+ - fixed refresh/cache issues with MSIE and Netscape on the tree
+   view page (I hope!). It still is not 100% correct. It all works
+   better if you are logged in before you attempt to go to the tree
+   view page.
+ - fixed quote handling on search page as suggested by
+   seva@rubis.lod.com
+ - added ODBC/MS Sql Server support as patched by 
+   seva@rubis.lod.com
+
+07/06/2000   Version 2.5.0
+ - changed default code names from "unassigned" and "not rated"
+   to "--"
+ - added links to edit codes from maintain and create pages.
+ - enhanced import page to look for existing category and
+   subcategory before adding a new one. This will allow you
+   to import mutliple files/times without getting duplicate
+   categories or subcategories. Note the duplicate check for
+   bookmarks was already coded.
+
+06/29/2000   Version 2.4.0
+ - changed from FastTemplates to PHPLIB's template class
+ - changed method by which db callout is instantiated
+   to make installation easier. Encouraged by idea from
+   javaman@vnet.net
+
+06/13/2000   Version 2.3.0
+ - fixed column name bug, uid, in user.php3
+ - changed to not use include_path anymore since it
+   causes much confusion and problems for people.
+   Using define() globals now.
+ - from jeferee@pobox.com: user page now adds ratings
+   and uses nextid function for bookmark insert.
+ - removed reliance on .htaccess file for settings.
+   trying to make installation and use easier for the
+   not technie user. added checks to index page to test
+   for proper php settings.
+
+04/12/yyyy   Version 2.2.0
+ - upgraded to PHPLIB 7.2b which is supposedly PHP4 compat.
+   small change required to auth_user for this PHPLIB upgrade,
+   see alter-2.2.0.sql.
+ - applied PHP4 related changes from <toby.cabot@pobox.com>
+ - fixed maillink sql bug identified by <toby.cabot@pobox.com>
+ - changed all auto_increment db columns to use PHPLIB db_sequence
+   and nextid functionality. this makes the db code more generic.
+ - added note to import page about MSIE export feature.
+ - first attempt at PostgreSQL support by adding database callout
+   class and functions to separate database specific code from
+   the main code base.
+ - moved all alter and db create scripts to ./lib/db/
+
+03/24/2000   Version 2.1.0
+ - changed name of column bookmark.public to bookmark.public_f
+   to better support other databases like postgres.
+ - to bookmarker.inc added db_first_row_offset to support use
+   of OFFSET, LIMIT SQL in other databases like postgres.
+ - import now lists all folder levels from input file in the
+   keyword column to facilitate searching since only 2 folder
+   levels are directly supported in the db.
+ - added WAP/WML sample page that displays public WML bookmarks
+ - when a cat/subcat is deleted, bookmarks of the cat/subcat
+   are assigned to cat/subcat 0.
+ - disallow delete of cat/subcat 0 to support above.
+ - fix wording of cat/subcat/rating section to refer to user
+   preferences page
+ - add BIG_TABLES db option to plist before main query.
+   this is MySQL specific, sorry.
+ - logout link only shows when user is logged in
+ - logout process redirects user back to start page - no need
+   for logout.body.tpl any longer
+
+
+01/23/2000   Version 2.0.2
+ - fixed bad auth_user update sql in alter-2.0.0.sql and bookmarker.sql.
+   this was causing more than one auth_user row to have the same 
+   perm_auth_cookie value, which could enable someone to login as
+   another user. See UPGRADE for info on how to fix this.
+ - changed composition of cookie to include user ID and be base_64
+   encoded before it is sent to the browser.
+ - added perm_cookie_lifetime to bookmarker.inc
+ - added GIF version of all images. Test user-agent, and if known
+   5.0 or later browser, show PNG image, otherwise show the GIF image.
+ - added test in user page to make sure user ID matches [A-Za-Z0-9]
+   
+01/17/2000   Version 2.0.1
+ - fixed bad create/insert sql in bookmarker.sql
+
+01/16/2000   Version 2.0.0
+ - split mailing lists. Now all discussion is on bookmarker, and
+   bookmarker-announce will be announcements only.
+ - track date that bookmark was added (new bookmark.added field)
+ - fixed bug on mail-this-link that could cause site footer to be added multiple times
+ - added graphics from tigert.gimp.org/ from gnome-stock
+ - added .int as valid top-level domain (TLD) #114
+ - added option on login to store auth as a permanent cookie
+   on the local browser. this allows you to bypass the login
+   on subsequent logins - ONLY set this when logging in via a
+   secure machine. You'll need to update the user record before
+   using this feature in order to set the perm_auth_cookie column
+   for each user.
+ - changed to use only .png graphics
+ - implemented public/private security for bookmarks. each bookmark is
+   set to either public or private. each user has a default private/public
+   status used for the create page. each user can say if they want to
+   see public bookmarks in their list/search, or just their own stuff.
+ - user page has option to set all bookmarks to private or public for a
+   user.
+ - guest user now just like any other, guest user sees all public
+   bookmarks from any other users.
+ - cleanup error msg and db error handling
+ - auto redirect back to list/search after maintain
+ - users can now only see their own user record, and can update their
+   own user record (except for permissions)
+ - more fixes to support PHPLIB GET session mode
+ - display name of currently logged in user
+ - store date each bookmark was added
+ - new netscape import PAGE! (look under user preferences)
+ 
+08/20/1999   Version 1.6
+ - updated to PHPLIB version 7
+ - bug 96: fixed image paths in all pages, also changed default
+   image_url_prefix in bookmarker.inc
+   
+
+07/08/1999   Version 1.5
+ - added DTDs to common.standard.tpl and tree.body.tpl
+ - changed definition of javascript blocks to be HTML 4.0 std
+ - added proper HTML comments to hide Javascript from non-JS
+   browsers
+ - added ALT attributes to IMG tags in tree view
+ - added optional keyword field to bookmarker table 
+   (changes from Keith Amidon <camalot@picnicpark.org>)
+ - changed layout of list page to show keywords and be more
+   compact (changes from Keith Amidon <camalot@picnicpark.org>)
+ - upgraded to FastTemplate version 1.1
+ - added ability to save searches. also search page now defaults
+   to last search during a session.
+   (idea from Keith Amidon <camalot@picnicpark.org>)
+ - the search page now accepts a where clause in the URL. if
+   specified it will be used
+ - the category/subcat headers in the list/search page are now
+   anchor tags that take you to the search page to find matches
+   on the cat or subcat
+ - added ability to show search results in the tree view.
+   (idea from Keith Amidon <camalot@picnicpark.org>)
+ - added ability to select saved searches from tree view
+   (idea from Keith Amidon <camalot@picnicpark.org>)
+ - added tree view option to control cat/subcat grouping
+   (idea from Keith Amidon <camalot@picnicpark.org>)
+ - added tree view option in bookmarker.inc to determine if
+   bookmarker pages are shown in tree view list
+ - added Javascript reload link to tree view page. doesn't work in
+    MSIE.
+
+ 
+06/13/1999   Version 1.4
+ - bug 65: added image_url_prefix setting to bookmarker.inc. Changed
+   all templates to use this variable before the image filename.
+ - bug 67: added scrollbars to popup quik-mark and mail-this-link 
+   windows. resized those same windows to better fit - note the 
+   sizes are HIGHLY dependent on your screen resolution - see 
+   FAQ for info on how to customize these settings.
+ - bug 64: conditionally hide first/last on the list page just like
+   prev/next
+ - fixed title text in header block - every page said "start"! :-(
+ - bug 71: changed all htmlentities calls to htmlspecialchars calls
+   to better support non-english character sets
+ - bug 69: added url_format_check option in bookmarker.inc to give
+   the installer control over URL format checking in maintain and 
+   create pages. changed validator class to check if all numeric
+   hostname - if so, call is_ipaddress function, otherwise call
+   normal is_hostname function. also submitted this change to 
+   thewebasters.net to see if they want to change their version.
+ - added a perl/dbi/dbd/cgi script to verify bookmarks. this was more
+   an excuse for me to learn these perl modules. you can use it if
+   you like. I run this about once every few months by hand. see
+   vbk.pl and vbk.sh for more info.
+ - bug 72: changed description field on maintain and create pages
+   to be multi line textarea form field. added nl2br call in plist.inc
+   to properly display the line breaks.
+   
+04/25/1999   Version 1.3
+ - fixed special character handling. when data from FORM field
+   loaded into db, data is passed through addslashes(). When
+   data read from db that was addslashed, the data is passed
+   through stripslashes, and if that data is destined for an HTML
+   page it is further passed through htmlentities().
+ - to support above, and give bookmarker full control over
+   character handling, bookmarker now requires magic_quotes_gpc
+   and magic_quotes_runtime to be OFF. See INSTALL file for more
+   info. 
+ - added javascript to login page (like create and maillink) to make
+   login pop to front when used by quik-mark or mail-this-link
+ - made permissions field on create user a select list
+ - changed authentication to try to use PHPLIB challenge-response
+   authentication using javascript. The challenge-response auth
+   avoids sending the password in plain text over the net. If user
+   does not have Javascript enabled, then the old style auth is used.
+ - changed the way passwords are stored in the user database. Now the
+   password is encrypted with the PHP md5 function before being stored.
+   this is to make it work with the challenge-response auth, as well
+   as be a little more portable than the previous use of the MySQL
+   password() function. All existing user passwords will need to be
+   updated - use the update-1.3.sql to get you started - read the
+   INSTALL file for detailed upgrade instructions.
+ - fixed sql bug in list.php3 (bug 59)
+ - added trim function for most form input fields (bug 60)
+ - slightly modified Sql_Query form function in bklocal.inc to match
+   the changed version I committed to PHPLIB for PHPLIB 7.x
+ - added support for multiple to addresses on the mail-this-link page
+ - changed list page to work based on limit and offset, also added
+   vcr buttons and links. this takes better advantage of the db and
+   makes more general sense. (bug 61) this includes two new PHPLIB
+   user variables - user_total_bookmarks and user_last_page.
+ 
+04/13/1999   Version 1.2
+ - upgraded to FastTemplate version 0.8 (inc. fixes for Windows)
+ - added note to INSTALL file for Windows users
+ - fixed bookmarker heading in tree.body.tpl
+ - removed maintain link under bookmarker heading in tree.body.tpl
+ - fixed create possible dup check to include username match in
+   WHERE clause
+ - modified create possible dup check to execute whenever a URL is
+   found, not just after quik-mark
+ - changed wording and HTML slightly in create.possible_dup.tpl
+ - changed possible dup check lookup logic to be scheme (http://)
+   + hostname (www.mydomain.com) + $bookmarker->possible_dup_chars
+   of path. possible_dup_chars now defaults to zero in bookmarker.inc
+ - search: added ID as allowed search field
+   
+04/12/1999   Version 1.1
+ - added FastTemplate class from http://www.thewebmasters.net/php/
+ - Full FastTemplate support to allow total interface customization for
+   local installations.
+ - Tested with PHP 3.0.7
+ - Tested with Apache 1.3.6
+ - Removed maintain link from header of each page. It didn't really make
+   sense since you can't go to the maintain without being in the context
+   of a bookmark, so clicking on the maintain link in the header would
+   NEVER get you in maintain mode for a bookmark.
+ - added mail-this-link page to allow you to send an email to someone
+   telling them about a link that they might be interested in. This 
+   required two new fields on the auth_user table
+ - restructured the bookmarker distribution web site on renaghan.com
+   to better separate the renaghan.com bookmarker installation from the
+   bookmarker software home page and distribution
+ - removed source page from website. with FastTemplates, bookmarker
+   has too many source files. keeping the download page up to date is
+   a pain.
+ - added function to check for possible duplicates on create page when
+   called from quik-mark
+ 
+03/27/1999   Version 1.0
+ - added Validator class from http://www.thewebmasters.net/php/Validator.phtml
+ - changed bugs.php3 and maillist.php3 to use email check from Validator
+   class
+ - changed create.php3 and maintain.php3 to check URL format using 
+   Validator class and to give a warning message if the URL does not
+   respond using a function in the Validator class.
+ - changed create.php3 to properly default fields given quik-mark function, 
+   and to not clear fields when validation error ocurrs, and to not clear
+   fields after a sucessful create.
+ - MS Internet Explorer has a buggy implementation of Javascript
+   (big shocker!) that prevents the quik-mark popup window from coming
+   to the top when it is opened. Therefore in the commonHeader function
+   I added code that if the browser is MSIE it runs a Javascript command
+   to bring the current page up to the front. I hate nothing more than
+   coding conditions based on the browser type, but I figured the quik-
+   mark function was worth it.
+ - updated Validator class to version 1.2 - changed text of email error
+   messages.
+ - added error message from Validator class for addl info
+ - added logic in maintain to display same data user entered when
+   page re-displayed after an error
+ - added Install FAQ section to INSTALL file
+ - added dist_site variable to bookmarker.inc to control display of
+   distribution site only related links in the footer
+ - added color and look & feel configuration settings to bookmarker.inc
+ - added urls_per_page setting to bookmarker.inc to control how many URLs
+   are printed on each "plain list" page
+ - added lots to the FAQ page
+
+03/01/1999   Version 1.0pre1
+ - added version to bookmarker class - display in footer
+ - added create_url to bookmarker class to support quik-mark
+ - added quik-mark feature to allow users to quickly add bookmarker
+   bookmarks right from their web browser. see faq.
+ - added faq page - so far info on quik-mark only
+ - added faq link to std header
+
+02/27/1999 Version 0.9
+ - added ID to maintain page
+ - removed help text from tree page - this will be replaced by full
+   user documentation
+ - added URL as TITLE attribute for links in tree view. this allows user
+   to hold mouse over link and see the URL before they open the link 
+   (note: TITLE attribute is not supported by all browsers)
+ - added "other bookmarks tools" section to start page
+ - removed $sess as parameter from common_hdr and common_footer functions.
+   those functions now declare $sess as global. also modified set_bk_username
+   to do the same with $sess and $auth.
+ - new file: bookmarker.inc. this file contains the configuration settings
+   class used for bookmarker. update the variables in this class to control
+   how the application looks and functions.
+ - created quick-and-dirty shell scripts to parse netscape bookmarks.html file
+   and prepare SQL statements to load into bookmarker database. not really
+   clean or commented, but should provide enough of a start for most people
+   to convert their bookmarks. see scripts named ns_convert*.
+ - cleaned up login form. removed "warning..." since I can't recreate that
+   bug anymore.
+
+12/29/1998 Version 0.8
+ - added user maintain page (user.php3)
+ - added single page to maintain data in category, sub-category, and
+   rating tables (codes.php3)
+ - added columns to category, sub-category, and rating table to support
+   codes.php3 page. allow each user to have their own set of these codes.
+ - updated database indexes on all tables to improve performance
+ - added stripslashes() to bugs.php3 and maillist.php3 pages
+ - added sample data to bookmarker.sql
+ - updated INSTALL file to refer to sample data and new functionality
+ - added alter-0.8.sql file to be run against pre 0.8 bookmarker
+   databases
+
+12/16/1998 Version 0.7
+ - added INSTALL file
+ - modifications to allow tree.php3 to be cached locally by the browser.
+   This dramatically improves the performance of the tree view.
+   this involved overriding the page_open() and start() functions of 
+   the PHPLIB session object. I am in discussions with the PHPLIB folks
+   to decide how to correctly implement these changes in my app or the
+   library itself.
+ - added alt tags to images on index.php3 page
+ - fixed search to use child table name fields instead of id fields
+ - changed query in plist to join with rating table for above
+ - added bug reporting email address to download page
+ - added mailing list info to download page
+ - mod bkshared.inc commonHeader to not anchor the current page to itself
+ - added PHPLIB version info to INSTALL file
+ - changed list page to use GET variables in the URL instead of session IDs.
+   allows using the forward and backward features in the browser
+ - moved loading of drop down list boxes into common function (load_ddlb).
+   updated create and maintain to use the common function
+ - added comments to INSTALL file about permissions
+ - added navigation bar to the footer for admin and less used functions
+ - added bugs.php3 page for reporting bookmarker defects
+ - added maillist.php3 page for sending comments, subscribing, unsubscribing
+   to the bookmarker mailing list
+ - added error message to source.php3 when file not found
+ - added case insensitive comment to search.php3
+ - fixed cache properly. overrode start() function of session object in 
+   bklocal.inc. Changed pages that are cache-able to use bk_sess_cache
+   object instead of bk_sess.
+
+11/24/1998 Version 0.3
+ - modularized list print code in list.php3 and search.php3
+ - improved handling of special characters in sql and html
+ - added link to maintain page for bookmark in tree view 
+ - added copyright and GPL info to each source file
+ - cleaned up appearence of tables in list and search
+ - made URL label on maintain an anchor tag for the bookmark
+
+11/23/1998 Version 0.2
+ - added tree view of bookmarks
+
+11/22/1998 Version 0.1
+ - initial release
+---------------------------------------------------------------------------

@@ -1,0 +1,42 @@
+<?php 
+# ---------------------------------------------------------------
+# bookmarker
+# A WWW based bookmark management, retrieval, and search tool.
+# Copyright (C) 1998  Padraic Renaghan
+# Licensed under terms of GNU General Public License
+# (see http://www.renaghan.com/bookmarker/source/LICENSE)
+# ---------------------------------------------------------------
+# $Id: glist.wml,v 1.1 2000/03/24 16:58:16 prenagha Exp $
+# ---------------------------------------------------------------
+include("bkprepend.inc");
+header("Content-Type: text/vnd.wap.wml");
+print("<?xml version=\"1.0\"?>");
+?>
+<!DOCTYPE wml PUBLIC "-//WAPFORUM//DTD WML 1.1//EN"
+  "http://www.wapforum.org/DTD/wml_1.1.xml">
+<wml>
+  <card>
+<?php
+$db    = new bk_db;
+
+$query = "select subcategory.name as subcategory_name "
+       . ", bookmark.name as bookmark_name, url "
+       . "from bookmark, subcategory "
+       . "where public_f = 'Y' "
+       . "and category_id = 12 "
+       . "and subcategory_id = subcategory.id "
+       . "order by subcategory_name, bookmark_name ";
+$db->query($query);
+if ($db->Errno != 0) {
+ print("<p>ERROR</p>");
+}
+
+while ($db->next_record()) {
+    $subcategory = $db->f("subcategory_name");
+    $name        = $db->f("bookmark_name");
+    $url         = $db->f("url");
+    printf("<p><a href=\"%s\" title=\"%s\">%s</a></p>", $url, $url, $name);
+}
+?>
+  </card>
+</wml>

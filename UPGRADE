@@ -1,0 +1,71 @@
+-- bookmarker UPGRADE Instructions --
+** Database alter scripts are located in ./lib/db/ **
+---------------------
+Version 2.2.0:
+Apply alter-2.2.0.sql to your database (instructions are inside
+this file.)
+Database column(s) have been renamed per PHPLIB 7.2b upgrade.
+New database sequence table created.
+*** YOU MUST update the bookmark and search rows in db_sequence
+    to the (max(id)+1)) in the respective table. Otherwise, you
+    will get duplicate key errors when inserting to bookmark or
+    search table.
+***
+
+---------------------
+Version 2.1.0:
+Database column(s) have been renamed to better support other
+databases like postgres.
+
+---------------------
+Version 2.0.2:
+Fixed bad auth_user update sql in alter-2.0.0.sql and bookmarker.sql.
+this was causing more than one auth_user row to have the same 
+perm_auth_cookie value, which could enable someone to login as
+another user. Run alter-2.0.2.sql against your databse to ensure
+this is fixed. This will reset all perm_auth_cookie values to a 
+unique value for every row in auth_user and will require that
+you login to get the new cookie value for your user.
+
+---------------------
+Version 2.0.0:
+Starting with this version, bookmarker is distributed
+with a functional version of PHPLIB 7 included in ./lib/phplib.
+There is no longer any need to setup/update/configure PHPLIB for use
+with bookmarker. The normal bookmarker installation will take care of this.
+
+New database columns have been added to support new features. Run
+the alter-2.0.0.sql script to update it.
+
+---------------------
+Version 1.6 - Starting with this version, bookmarker works with
+PHPLIB version 7 only. Please upgrade your PHPLIB installation
+before upgrading to bookmarker version 1.6.
+
+---------------------
+Version 1.5 adds a keyword field to the database and the ability to save
+searches in the database. A new field on the bookmark table and a new
+search table are needed. Run the alter-1.5.sql script against your
+bookmarker database to update it.
+
+---------------------
+Version 1.3 now encrypts user password using the built-in PHP md5 function
+instead of using the MySQL password() function. Therefore ALL existing
+user passwords must have their passwords updated to the md5 version.
+Included in the dist is the update-1.3.sql file. This will allow you
+to set the password for the admin user to "bk" so that you can login
+to bookmarker and change the passwords for all users - just use the
+user.php3 page and enter in the passwd for each user, this will 
+automatically update it to the new md5 encrypted version.
+
+---------------------
+Version 1.1 adds two new fields to the auth_user table. Please read and
+apply the contents of the alter-1.1.sql file to bring your database
+up to date. You will also want to populate these new fields in the 
+auth_user table (name, email) so that the mail-this-link function works
+properly.
+
+---------------------
+If you are running a version of bookmarker older than version 0.8,
+please read and apply the contents of the alter-0.8.sql file to
+bring your database up to the version that 0.8 requires.
